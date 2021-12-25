@@ -1,7 +1,7 @@
 extends Resource
 class_name ControlsRemap
 
-const ACTION_LIST = ["ui_up", "ui_down", "ui_left", "ui_right"]
+const ACTION_LIST = ["ui_up", "ui_down", "ui_left", "ui_right", "ui_accept", "ui_cancel"]
 
 export var prefix: String setget set_prefix
 export var keyboard_remap: Dictionary
