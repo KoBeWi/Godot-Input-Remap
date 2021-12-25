@@ -40,7 +40,7 @@ To sum up:
 - use ResourceSaver to save it to a file and ResourceLoader to load it later
 - after loading, you can replace your InputMap by using `apply_remap()`
 
-The remap works well with [my Action Icon asset](https://github.com/KoBeWi/Godot-Action-Icon), because it allows to easily display the assigned keys.
+The remap works well with [my Action Icon asset](https://github.com/KoBeWi/Godot-Action-Icon), because it allows to easily display the assigned keys. If you want to display the controls yourself, you can use `get_action_key()` and `get_action_button()` to get relevant input events.
 
 ### Notes
 
