@@ -15,16 +15,11 @@ var stashed_joypad: Dictionary
 
 func _init(p_prefix := "") -> void:
 	prefix = p_prefix
-	load_defaults()
+	_load_defaults()
 
 func set_prefix(p_prefix: String):
 	prefix = p_prefix
-	load_defaults()
-
-func load_defaults():
-	for action in ACTION_LIST:
-		_map_input(default_keyboard, action, get_action_key(action))
-		_map_input(default_joypad, action, get_action_button(action))
+	_load_defaults()
 
 func create_remap():
 	keyboard_remap.clear()
@@ -126,6 +121,11 @@ func find_duplicates() -> Array:
 						break
 	
 	return dupes
+
+func _load_defaults():
+	for action in ACTION_LIST:
+		_map_input(default_keyboard, action, get_action_key(action))
+		_map_input(default_joypad, action, get_action_button(action))
 
 func _map_input(map: Dictionary, action: String, input):
 	if input is InputEventKey:
