@@ -63,3 +63,8 @@ Use `restore_default_controls()` to restore everything to default or `restore_ac
 You can use `clone_remap()` to temporarily store curreent input. For example, if you have some customized actions, but want to restore them later, you can use `clone_remap()` before going to control settings menu and then `restore_cloned_remap()` to restore the previous controls if the user cancels the settings.
 
 Lastly, there is `find_duplicates()` method that returns conflicting actions, i.e. action names of actions that have the same key/button assigned.
+
+___
+You can find all my addons on my [profile page](https://github.com/KoBeWi).
+
+<a href='https://ko-fi.com/W7W7AD4W4' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
