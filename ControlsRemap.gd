@@ -1,29 +1,34 @@
 extends Resource
 class_name ControlsRemap
 
+## A resource for modifying, saving and loading project's InputMap.
+
+## List of actions you want to handle.
 const ACTION_LIST = ["ui_up", "ui_down", "ui_left", "ui_right", "ui_accept", "ui_cancel"]
 
-export var prefix: String setget set_prefix
-export var keyboard_remap: Dictionary
-export var joypad_remap: Dictionary
+## Prefix for this remap resource (useful for multiple control schemes in multiplayer games etc).
+@export var prefix: String:
+	set(p_prefix):
+		prefix = p_prefix
+		_load_defaults()
 
-var default_keyboard: Dictionary
-var default_joypad: Dictionary
+@export var _keyboard_remap: Dictionary
+@export var _joypad_remap: Dictionary
 
-var stashed_keyboard: Dictionary
-var stashed_joypad: Dictionary
+var _default_keyboard: Dictionary
+var _default_joypad: Dictionary
+
+var _stashed_keyboard: Dictionary
+var _stashed_joypad: Dictionary
 
 func _init(p_prefix := "") -> void:
 	prefix = p_prefix
 	_load_defaults()
 
-func set_prefix(p_prefix: String):
-	prefix = p_prefix
-	_load_defaults()
-
+## Creates a remap by fetching the actions from ActionMap. Only non-default actions are stored.
 func create_remap():
-	keyboard_remap.clear()
-	joypad_remap.clear()
+	_keyboard_remap.clear()
+	_joypad_remap.clear()
 	var keyboard_actions: Dictionary
 	var joypad_actions: Dictionary
 	
@@ -32,64 +37,74 @@ func create_remap():
 		_map_input(joypad_actions, action, get_action_button(action))
 	
 	for action in ACTION_LIST:
-		if action in keyboard_actions and action in default_keyboard:
-			if keyboard_actions[action] != default_keyboard[action]:
-				keyboard_remap[action] = keyboard_actions[action]
+		if action in keyboard_actions and action in _default_keyboard:
+			if keyboard_actions[action] != _default_keyboard[action]:
+				_keyboard_remap[action] = keyboard_actions[action]
 		
-		if action in joypad_actions and action in default_joypad:
-			if joypad_actions[action] != default_joypad[action]:
-				joypad_remap[action] = joypad_actions[action]
+		if action in joypad_actions and action in _default_joypad:
+			if joypad_actions[action] != _default_joypad[action]:
+				_joypad_remap[action] = joypad_actions[action]
 
+## Applies the inputs from this ControlsRemap to the projects InputMap.
 func apply_remap():
 	restore_default_controls()
 	for action in ACTION_LIST:
-		_demap_input(keyboard_remap, action, get_action_key(action))
-		_demap_input(joypad_remap, action, get_action_button(action))
+		_demap_input(_keyboard_remap, action, get_action_key(action))
+		_demap_input(_joypad_remap, action, get_action_button(action))
 
+## Restores all actions to the defaults defined in project's settings.
 func restore_default_controls():
 	for action in ACTION_LIST:
 		restore_action_default(action)
 
+## Restores a single action to its default state.
 func restore_action_default(action: String):
-	_demap_input(default_keyboard, action, get_action_key(action))
-	_demap_input(default_joypad, action, get_action_button(action))
+	_demap_input(_default_keyboard, action, get_action_key(action))
+	_demap_input(_default_joypad, action, get_action_button(action))
 
+## Creates an internal clone of the remap resource.
 func clone_remap():
-	stashed_keyboard = keyboard_remap.duplicate()
-	stashed_joypad = joypad_remap.duplicate()
+	_stashed_keyboard = _keyboard_remap.duplicate()
+	_stashed_joypad = _joypad_remap.duplicate()
 
+## Restores remap from the internal clone.
 func restore_cloned_remap():
-	keyboard_remap = stashed_keyboard.duplicate()
-	joypad_remap = stashed_joypad.duplicate()
+	_keyboard_remap = _stashed_keyboard.duplicate()
+	_joypad_remap = _stashed_joypad.duplicate()
 
+## Replaces the first InputEventKey in an action with the given one.
 func set_action_key(action: String, key: InputEventKey) -> bool:
-	for event in InputMap.get_action_list(prefix + action):
+	for event in InputMap.action_get_events(prefix + action):
 		if event is InputEventKey:
-			event.scancode = key.scancode
+			event.keycode = key.keycode
 			return true
 	return false
 
+## Returns the first InputEventKey assigned to the action.
 func get_action_key(action: String) -> InputEventKey:
-	for event in InputMap.get_action_list(prefix + action):
+	for event in InputMap.action_get_events(prefix + action):
 		if event is InputEventKey:
 			return event
 	return null
 
+## Replaces the first InputEventJoypadButton in an action with the given one.
 func set_action_button(action: String, button: InputEventJoypadButton) -> bool:
-	for event in InputMap.get_action_list(prefix + action):
+	for event in InputMap.action_get_events(prefix + action):
 		if event is InputEventJoypadButton:
 			event.button_index = button.button_index
 			return true
 	return false
 
+## Returns the first InputEventJoypadButton assigned to the action.
 func get_action_button(action: String) -> InputEventJoypadButton:
-	for event in InputMap.get_action_list(prefix + action):
+	for event in InputMap.action_get_events(prefix + action):
 		if event is InputEventJoypadButton:
 			return event
 	return null
 
-func find_duplicates() -> Array:
-	var dupes: Array
+## Returns an array of action names that have assigned conflicting input events.
+func find_duplicates() -> Array[String]:
+	var dupes: Array[String]
 	
 	for action in ACTION_LIST:
 		var key1 := get_action_key(action)
@@ -124,12 +139,12 @@ func find_duplicates() -> Array:
 
 func _load_defaults():
 	for action in ACTION_LIST:
-		_map_input(default_keyboard, action, get_action_key(action))
-		_map_input(default_joypad, action, get_action_button(action))
+		_map_input(_default_keyboard, action, get_action_key(action))
+		_map_input(_default_joypad, action, get_action_button(action))
 
 func _map_input(map: Dictionary, action: String, input):
 	if input is InputEventKey:
-		map[action] = input.scancode
+		map[action] = input.keycode
 	elif input is InputEventJoypadButton:
 		map[action] = input.button_index
 

@@ -4,9 +4,9 @@ ControlsRemap will store your input mapping. It's a resource, so you can save it
 
 ### How does it work?
 
-ControlsRemap has an `ACTION_LIST` constant (you need to edit it manually). To create a remap, it will go over these actions and look for InputEventKey and InputEventJoypadButton. It will store the `scancode`/`button_index` of the first events it finds in the action. When the ControlsRemap is first created, it will use the currently assigned buttons as defaults, so it's important to create it before any input is edited.
+ControlsRemap has an `ACTION_LIST` constant (you need to edit it manually). To create a remap, it will go over these actions and look for InputEventKey and InputEventJoypadButton. It will store the `keycode`/`button_index` of the first events it finds in the action. When the ControlsRemap is first created, it will use the currently assigned buttons as defaults, so it's important to create it before any input is edited.
 
-The remap is applied by looking for InputEvents inside action and replacing its button id. It might sound complicated, but it's done automatically by using methods.
+The remap is applied by looking for InputEvents inside action and replacing its button id. It might sound complicated, but it's done automatically by using methods. The class includes a built-in documentation.
 
 ### Usage
 
@@ -22,7 +22,7 @@ func _input(event):
     if event is InputEventKey:
         remap.set_action_key(current_action, event)
 ```
-After this operation, `Input.is_action_pressed(that_action)` will use the key you just changed.
+After this operation, `Input.is_action_pressed(current_action)` will use the key you just changed.
 
 After you customized your controls, use `remap.create_remap()` to store your assigned buttons inside ControlsRemap resource. Then you can use `ResourceSaver.save("user://my_remap.tres", remap)` to save your remap to a file.
 
