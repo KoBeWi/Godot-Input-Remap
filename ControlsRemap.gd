@@ -153,6 +153,6 @@ func _demap_input(map: Dictionary, action: String, input):
 		return
 	
 	if input is InputEventKey:
-		input.scancode = map[action]
+		input.keycode = map[action]
 	elif input is InputEventJoypadButton:
 		input.button_index = map[action]
