@@ -1,10 +1,10 @@
-# <img src="https://github.com/KoBeWi/Godot-Input-Remap/blob/master/Media/Icon.png" width="64" height="64"> Godot Controls Remap
+# <img src="Media/Icon.png" width="64" height="64"> Godot Controls Remap
 
 ControlsRemap will store your input mapping. It's a resource, so you can save it and load it. It supports keyboard and joypad separately. You can use it to have easily customizable controls in your game.
 
 ### How does it work?
 
-ControlsRemap has an `ACTION_LIST` constant (you need to edit it manually). To create a remap, it will go over these actions and look for InputEventKey and InputEventJoypadButton. It will store the `keycode`/`button_index` of the first events it finds in the action. When the ControlsRemap is first created, it will use the currently assigned buttons as defaults, so it's important to create it before any input is edited.
+First enable the Controls Remap addon and define what actions you want to handle in `addons/ControlsRemap/action_list` project setting. To create a remap, the resource will go over these actions and look for InputEventKey and InputEventJoypadButton. It will store the `keycode`/`button_index` of the first events it finds in the action. When the ControlsRemap is first created, it will use the currently assigned buttons as defaults, so it's important to create it before any input is edited.
 
 The remap is applied by looking for InputEvents inside action and replacing its button id. It might sound complicated, but it's done automatically by using methods. The class includes a built-in documentation.
 

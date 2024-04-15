@@ -1,10 +1,11 @@
+@icon("res://addons/ControlsRemap/Icon.png")
 extends Resource
 class_name ControlsRemap
 
 ## A resource for modifying, saving and loading project's InputMap.
 
-## List of actions you want to handle.
-const ACTION_LIST = ["ui_up", "ui_down", "ui_left", "ui_right", "ui_accept", "ui_cancel"]
+## List of actions you want to handle. Define it in "addons/ControlsRemap/action_list" project setting.
+var action_list: Array[StringName]
 
 ## Prefix for this remap resource (useful for multiple control schemes in multiplayer games etc).
 @export var prefix: String:
@@ -23,6 +24,7 @@ var _stashed_joypad: Dictionary
 
 func _init(p_prefix := "") -> void:
 	prefix = p_prefix
+	action_list = ProjectSettings.get_setting("addons/ControlsRemap/action_list")
 	_load_defaults()
 
 ## Creates a remap by fetching the actions from ActionMap. Only non-default actions are stored.
@@ -32,11 +34,11 @@ func create_remap():
 	var keyboard_actions: Dictionary
 	var joypad_actions: Dictionary
 	
-	for action in ACTION_LIST:
+	for action in action_list:
 		_map_input(keyboard_actions, action, get_action_key(action))
 		_map_input(joypad_actions, action, get_action_button(action))
 	
-	for action in ACTION_LIST:
+	for action in action_list:
 		if action in keyboard_actions and action in _default_keyboard:
 			if keyboard_actions[action] != _default_keyboard[action]:
 				_keyboard_remap[action] = keyboard_actions[action]
@@ -48,13 +50,13 @@ func create_remap():
 ## Applies the inputs from this ControlsRemap to the projects InputMap.
 func apply_remap():
 	restore_default_controls()
-	for action in ACTION_LIST:
+	for action in action_list:
 		_demap_input(_keyboard_remap, action, get_action_key(action))
 		_demap_input(_joypad_remap, action, get_action_button(action))
 
 ## Restores all actions to the defaults defined in project's settings.
 func restore_default_controls():
-	for action in ACTION_LIST:
+	for action in action_list:
 		restore_action_default(action)
 
 ## Restores a single action to its default state.
@@ -106,10 +108,10 @@ func get_action_button(action: String) -> InputEventJoypadButton:
 func find_duplicates() -> Array[String]:
 	var dupes: Array[String]
 	
-	for action in ACTION_LIST:
+	for action in action_list:
 		var key1 := get_action_key(action)
 		if key1:
-			for action2 in ACTION_LIST:
+			for action2 in action_list:
 				if action == action2:
 					continue
 				
@@ -119,13 +121,13 @@ func find_duplicates() -> Array[String]:
 						dupes.append(action)
 						break
 	
-	for action in ACTION_LIST:
+	for action in action_list:
 		if action in dupes:
 			continue
 		
 		var button1 := get_action_button(action)
 		if button1:
-			for action2 in ACTION_LIST:
+			for action2 in action_list:
 				if action == action2:
 					continue
 				
@@ -138,7 +140,7 @@ func find_duplicates() -> Array[String]:
 	return dupes
 
 func _load_defaults():
-	for action in ACTION_LIST:
+	for action in action_list:
 		_map_input(_default_keyboard, action, get_action_key(action))
 		_map_input(_default_joypad, action, get_action_button(action))
 
