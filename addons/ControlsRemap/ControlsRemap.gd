@@ -117,7 +117,7 @@ func find_duplicates() -> Array[String]:
 				
 				var key2 := get_action_key(action2)
 				if key2:
-					if key1.scancode == key2.scancode:
+					if key1.keycode == key2.keycode:
 						dupes.append(action)
 						break
 	
