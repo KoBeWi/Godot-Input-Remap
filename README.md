@@ -1,20 +1,21 @@
 # <img src="Media/Icon.png" width="64" height="64"> Godot Controls Remap
 
-ControlsRemap will store your input mapping. It's a resource, so you can save it and load it. It supports keyboard and joypad separately. You can use it to have easily customizable controls in your game.
+ControlsRemap will store your input mapping. It's a Resource, so you can save it and load it. It supports keyboard and joypad separately. You can use it to have easily customizable controls in your game.
 
 ### How does it work?
 
-First enable the Controls Remap addon and define what actions you want to handle in `addons/ControlsRemap/action_list` project setting. To create a remap, the resource will go over these actions and look for InputEventKey and InputEventJoypadButton. It will store the `keycode`/`button_index` of the first events it finds in the action. When the ControlsRemap is first created, it will use the currently assigned buttons as defaults, so it's important to create it before any input is edited.
+First enable the Controls Remap addon and define what actions you want to handle in `addons/ControlsRemap/action_list` project setting. To create a remap, the resource will go over these actions and look for InputEventKey and InputEventJoypadButton. It will store the `keycode`/`button_index` of the first events it finds in the action (physical keycodes are not supported). When the ControlsRemap is first created, it will use the currently assigned buttons as defaults, so it's important to create it before any input is edited.
 
-The remap is applied by looking for InputEvents inside action and replacing its button id. It might sound complicated, but it's done automatically by using methods. The class includes a built-in documentation.
+The remap is applied by looking for InputEvents inside action and replacing its button ID. It might sound complicated, but it's done automatically by using methods. The class includes a built-in documentation.
 
 ### Usage
 
-First, you need to create the remap resource:
+First, define your tracked actions in `addons/ControlsRemap/action_list` project setting.
+
+Then you need to create the remap resource:
 ```GDScript
 var remap = ControlsRemap.new()
 ```
-Be sure to customize your actions first.
 
 Then you can edit the assigned buttons by using `set_action_key()` for keyboard or `set_action_button()` for joypad. For example, you can listen for input and do:
 ```GDSCript
@@ -34,11 +35,11 @@ remap.apply_remap()
 to apply your stored controls.
 
 To sum up:
-- create a ControlsRemap resource
-- use `set_action_key()` or `set_action_button()` methods to customize your InputMap
-- use `create_remap()` to store your InputMap keys/buttons in the remap resource
-- use ResourceSaver to save it to a file and ResourceLoader to load it later
-- after loading, you can replace your InputMap by using `apply_remap()`
+- Create a ControlsRemap resource.
+- Use `set_action_key()` or `set_action_button()` methods to customize your InputMap
+- Use `create_remap()` to store your InputMap keys/buttons in the remap resource
+- Uuse ResourceSaver to save it to a file and ResourceLoader to load it later
+- After loading, you can replace your InputMap by using `apply_remap()`
 
 The remap works well with [my Action Icon asset](https://github.com/KoBeWi/Godot-Action-Icon), because it allows to easily display the assigned keys. If you want to display the controls yourself, you can use `get_action_key()` and `get_action_button()` to get relevant input events.
 
@@ -56,13 +57,13 @@ The remap created with `create_remap()` will only store actions that are differe
 
 Aside from that, the ControlsRemap has a few other useful things.
 
-`prefix` can be used for multiplayer controls. E.g. if you have `p1_` prefix, the ControlsRemap will use `p1_jump` instead of `jump` action. This way you can have easily customizable multiplayer controls. Use multiple ControlsRemap files to store controls for many players.
+`prefix` can be used for local co-op controls. E.g. if you set `p1_` prefix, the ControlsRemap will use `p1_jump` instead of `jump` action. This way you can have easily customizable multiplayer controls. Use multiple ControlsRemap files to store controls for many players.
 
-Use `restore_default_controls()` to restore everything to default or `restore_action_default()` to restore one action to its default inputs.
+Call `restore_default_controls()` to restore everything to default, or `restore_action_default()` to restore one action to its default inputs.
 
 You can use `clone_remap()` to temporarily store curreent input. For example, if you have some customized actions, but want to restore them later, you can use `clone_remap()` before going to control settings menu and then `restore_cloned_remap()` to restore the previous controls if the user cancels the settings.
 
-Lastly, there is `find_duplicates()` method that returns conflicting actions, i.e. action names of actions that have the same key/button assigned.
+Lastly, there is `find_duplicates()` method that returns conflicting actions, i.e. action names of actions that have the same key or button assigned.
 
 ___
 You can find all my addons on my [profile page](https://github.com/KoBeWi).
