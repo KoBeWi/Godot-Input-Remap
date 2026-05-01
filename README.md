@@ -38,7 +38,7 @@ To sum up:
 - Create a ControlsRemap resource.
 - Use `set_action_key()` or `set_action_button()` methods to customize your InputMap
 - Use `create_remap()` to store your InputMap keys/buttons in the remap resource
-- Uuse ResourceSaver to save it to a file and ResourceLoader to load it later
+- Use ResourceSaver to save it to a file and ResourceLoader to load it later
 - After loading, you can replace your InputMap by using `apply_remap()`
 
 The remap works well with [my Action Icon asset](https://github.com/KoBeWi/Godot-Action-Icon), because it allows to easily display the assigned keys. If you want to display the controls yourself, you can use `get_action_key()` and `get_action_button()` to get relevant input events.
